@@ -1,0 +1,63 @@
+{
+    "id": {
+        "article": [
+            null,
+            null
+        ],
+        "motivation": [
+            true,
+            null
+        ],
+        "lang": "eng",
+        "name": "HAE",
+        "news": {
+            "category": [],
+            "country": []
+        },
+        "trends": [
+            "Ukraine",
+            "Kyiv"
+        ],
+        "weather": [
+            "Sloviansk",
+            null
+        ]
+    },
+    "1612136121": {
+        "name": "@primary_trial_bot",
+        "article": null,
+        "motivation": [
+            null,
+            null
+        ],
+        "lang": "eng",
+        "news": true,
+        "trends": null,
+        "weather": true
+    },
+    "1612136127": {
+        "name": "HAE",
+        "article": null,
+        "motivation": [
+            null,
+            null
+        ],
+        "lang": "eng",
+        "news": true,
+        "trends": true,
+        "weather": true
+    },
+    "1612136120": {
+        "name": "HAE",
+        "article": null,
+        "motivation": [
+            true,
+            null
+        ],
+        "lang": "eng",
+        "news": true,
+        "trends": true,
+        "weather": null
+    }
+}
+            
