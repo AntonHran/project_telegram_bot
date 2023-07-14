@@ -8,8 +8,8 @@ This Telegram bot has the following functionality, which is already implemented:
    - News.
    - Random article.
 
-- News category has sections like Business, Entertainment, General, Health, Science, Sports, Technology. The user can also select the desired country for news.
-- User can provide additional information such as city, country and preferred time of sending messages for other categories.
+- The News category has sections like Business, Entertainment, General, Health, Science, Sports, Technology. The user can also select the desired country for news.
+- Users can provide additional information such as city, country and preferred time of sending messages for other categories.
 - All user settings are stored in a JSON file.
 
 However, there are some features that still need to be implemented:
