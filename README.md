@@ -1,3 +1,7 @@
+This is Primary bot, it can help you create the information environment you need—send news,
+events and books that you are interested in also send the weather forecast, interesting articles
+and motivational phrases to shape a good mental mood. 
+
 This Telegram bot has the following functionality, which is already implemented:
 
 - At the first launch, the user can choose the language (English or Ukrainian) for further use of the bot.
