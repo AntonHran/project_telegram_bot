@@ -4,3 +4,4 @@ for telegram chat-bot.txt
 token.txt
 app.log
 /.vscode
+/__pycache__
