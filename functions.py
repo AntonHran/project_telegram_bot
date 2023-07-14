@@ -149,7 +149,7 @@ def translate(text: str) -> str:
         text = trnas.translate(text)
         return text
     else:
-        text = [text[i : i + 5000] for i in range(0, len(text), 5000)]
+        text = [text[i: i + 5000] for i in range(0, len(text), 5000)]
         return "".join(text)
 
 
