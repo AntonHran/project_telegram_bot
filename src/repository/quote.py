@@ -14,7 +14,7 @@ async def quote_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif ans == "skip":
         context.user_data["menu_categories"][int(QUOTE_TIME)].append("default")
     lang_dict = await get_json(Path(__file__).parent.parent.joinpath("services/languages.json"))
-    await update.message.reply_text(text=lang_dict[context.user_data["lang"]]["phr"]["wiki"])
+    # await update.message.reply_text(text=lang_dict[context.user_data["lang"]]["phr"]["motivation"])
     return await next_state_new(update, context)
 
 
