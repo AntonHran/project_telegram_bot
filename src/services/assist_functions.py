@@ -25,7 +25,7 @@ async def get_json(filepath: Path):
 
 
 async def next_state_new(update, context):
-    print(Path(__file__).parent.joinpath("languages.json"))
+    # print(Path(__file__).parent.joinpath("languages.json"))
     lang_dict = await get_json(Path(__file__).parent.joinpath("languages.json"))
     lang = context.user_data["lang"]
     for el in keys_:
@@ -38,6 +38,7 @@ async def next_state_new(update, context):
         else:
             query = update.callback_query
             await query.message.reply_text(text=lang_dict[lang]["phr"]["end_set"])
+    print(context.user_data)
     return ConversationHandler.END
 
 
@@ -46,10 +47,12 @@ async def check(menu_category, update: Update, context: ContextTypes.DEFAULT_TYP
     lang = context.user_data["lang"]
     if (
         int(menu_category) in context.user_data["menu_categories"].keys()
-        and not context.user_data["menu_categories"][int(menu_category)]
+        and not context.user_data["menu_categories"][int(menu_category)] and int(menu_category)
     ):
-        await update.message.reply_text(
-            text=lang_dict[lang]["phr"][keys_[menu_category]]
-        )
+        if update.message:
+            await update.message.reply_text(text=lang_dict[lang]["phr"][keys_[menu_category]])
+        else:
+            query = update.callback_query
+            await query.message.reply_text(text=lang_dict[lang]["phr"][keys_[menu_category]])
         print(menu_category)
         return menu_category
