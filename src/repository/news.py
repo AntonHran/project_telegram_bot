@@ -57,7 +57,7 @@ async def news_category_choose(update: Update, context: ContextTypes.DEFAULT_TYP
     ]
     reply = telegram.InlineKeyboardMarkup(inline_keyboard=buttons_category)
     await update.message.reply_text(
-        text=lang_dict[lang]["phr"]["category"], reply_markup=reply
+        text=lang_dict[lang]["phr"]["news"], reply_markup=reply
     )
     return CATEGORY
 
@@ -136,6 +136,7 @@ async def country_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 handler_news = MessageHandler(filters.TEXT, news_category_choose)
+# handler_news = MessageHandler(filters.TEXT & ~filters.COMMAND, some_handler)
 handler_news_country = CallbackQueryHandler(country_chosen)
 handler_news_category = CallbackQueryHandler(category_chosen)
 
