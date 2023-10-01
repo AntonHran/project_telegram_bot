@@ -48,14 +48,22 @@ logging.basicConfig(
     CATEGORY,
     CITY_WEATHER,
     TRENDS,
+    GENRE,
 ) = range(12)
 menu_categories = []
-categories, countries = [], []
+categories, countries, genres = [], [], []
 lang = ""
 data = {}
 
 with open("languages.json", "r", encoding="utf-8") as jf:
     lang_dict = json.load(jf)
+
+
+async def get_chat_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()  # ???
+    chat_id_ = query.message.chat_id
+    return chat_id_
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -145,11 +153,12 @@ async def settings_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(menu)
     await query.answer()
     # await query.edit_message_reply_markup(reply_markup=telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton(text='✔️ '+lang_dict[lang]['keys'][keys[int(menu)]])]]))  # '✔️'
-    global chat_id_
-    chat_id_ = query.message.chat_id
+    # global chat_id_
+    # chat_id_ = query.message.chat_id
+    id_chat = await get_chat_id(update, context)
     data.update(
         {
-            chat_id_: dict(
+            id_chat: dict(
                 name=query.from_user.name,
                 article=[],
                 books=[],
@@ -180,7 +189,7 @@ async def settings_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def next_state_func(update, context) -> int:
-    # print(context.user_data)
+    print(context.user_data)
     if (
         str(MOTIVATION_TIME) in context.user_data.keys()
         and context.user_data[str(MOTIVATION_TIME)][1] != "done"
@@ -220,57 +229,7 @@ async def next_state_func(update, context) -> int:
         str(CATEGORY) in context.user_data.keys()
         and context.user_data[str(CATEGORY)][1] != "done"
     ):
-        countries.clear()
-        categories.clear()
-        buttons_category = [
-            [
-                telegram.InlineKeyboardButton(
-                    text=lang_dict[lang]["keys"]["business"], callback_data="business"
-                )
-            ],
-            [
-                telegram.InlineKeyboardButton(
-                    text=lang_dict[lang]["keys"]["entert"],
-                    callback_data="entertainment",
-                )
-            ],
-            [
-                telegram.InlineKeyboardButton(
-                    text=lang_dict[lang]["keys"]["general"], callback_data="general"
-                )
-            ],
-            [
-                telegram.InlineKeyboardButton(
-                    text=lang_dict[lang]["keys"]["health"], callback_data="health"
-                )
-            ],
-            [
-                telegram.InlineKeyboardButton(
-                    text=lang_dict[lang]["keys"]["science"], callback_data="science"
-                )
-            ],
-            [
-                telegram.InlineKeyboardButton(
-                    text=lang_dict[lang]["keys"]["sports"], callback_data="sports"
-                )
-            ],
-            [
-                telegram.InlineKeyboardButton(
-                    text=lang_dict[lang]["keys"]["tech"], callback_data="technology"
-                )
-            ],
-            [
-                telegram.InlineKeyboardButton(
-                    text=lang_dict[lang]["keys"]["dn_c"], callback_data="done"
-                )
-            ],
-        ]
-        reply = telegram.InlineKeyboardMarkup(inline_keyboard=buttons_category)
-        await update.message.reply_text(
-            text=lang_dict[lang]["phr"]["category"], reply_markup=reply
-        )
-        context.user_data[str(CATEGORY)][1] = "done"
-        return CATEGORY
+        await category_chosen(update, context)
     else:
         print(data)
 
@@ -295,6 +254,60 @@ async def next_state_func(update, context) -> int:
         return ConversationHandler.END
 
 
+async def news_category_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    countries.clear()
+    categories.clear()
+    buttons_category = [
+        [
+            telegram.InlineKeyboardButton(
+                text=lang_dict[lang]["keys"]["business"], callback_data="business"
+            )
+        ],
+        [
+            telegram.InlineKeyboardButton(
+                text=lang_dict[lang]["keys"]["entert"],
+                callback_data="entertainment",
+            )
+        ],
+        [
+            telegram.InlineKeyboardButton(
+                text=lang_dict[lang]["keys"]["general"], callback_data="general"
+            )
+        ],
+        [
+            telegram.InlineKeyboardButton(
+                text=lang_dict[lang]["keys"]["health"], callback_data="health"
+            )
+        ],
+        [
+            telegram.InlineKeyboardButton(
+                text=lang_dict[lang]["keys"]["science"], callback_data="science"
+            )
+        ],
+        [
+            telegram.InlineKeyboardButton(
+                text=lang_dict[lang]["keys"]["sports"], callback_data="sports"
+            )
+        ],
+        [
+            telegram.InlineKeyboardButton(
+                text=lang_dict[lang]["keys"]["tech"], callback_data="technology"
+            )
+        ],
+        [
+            telegram.InlineKeyboardButton(
+                text=lang_dict[lang]["keys"]["dn_c"], callback_data="done"
+            )
+        ],
+    ]
+    reply = telegram.InlineKeyboardMarkup(inline_keyboard=buttons_category)
+    await update.message.reply_text(
+        text=lang_dict[lang]["phr"]["category"], reply_markup=reply
+    )
+    context.user_data[str(CATEGORY)][1] = "done"
+    return CATEGORY
+
+
 async def continue_(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         text=lang_dict[lang]["phr"]["continue"][1],
@@ -312,7 +325,8 @@ async def continue_(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def article_time(update, context):
     # chat_id = update.message.chat_id
     ans = update.message.text
-    data[chat_id_]["article"].append(True)
+    id_chat = await get_chat_id(update, context)
+    data[id_chat]["article"].append(True)
     if ans and ans != "skip":
         data[chat_id_]["article"].append(
             datetime.datetime.strptime(ans.strip(), "%H:%M").time()
@@ -431,12 +445,86 @@ async def trends_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return next_state
 
 
-async def books_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    ans = update.message.text
-    # chat_id = update.message.chat_id
-    data[chat_id_]["books"].append((True, ans))
-    next_state = await next_state_func(update, context)
-    return next_state
+async def genres_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    genre = query.data
+    await query.answer()
+    # await query.edit_message_text(text='✔️ ' + lang_dict[lang]['keys'][category])
+    if genre == "done":
+        buttons_genres = [
+            [
+                telegram.InlineKeyboardButton(
+                    text=lang_dict[lang]["keys"]["fiction"], callback_data="fiction"
+                )
+            ],
+            [
+                telegram.InlineKeyboardButton(
+                    text=lang_dict[lang]["keys"]["mystery"], callback_data="mystery"
+                )
+            ],
+            [
+                telegram.InlineKeyboardButton(
+                    text=lang_dict[lang]["keys"]["science fiction"], callback_data="science fiction"
+                )
+            ],
+            [
+                telegram.InlineKeyboardButton(
+                    text=lang_dict[lang]["keys"]["fantasy"], callback_data="fantasy"
+                )
+            ],
+            [
+                telegram.InlineKeyboardButton(
+                    text=lang_dict[lang]["keys"]["romance"], callback_data="romance"
+                )
+            ],
+            [
+                telegram.InlineKeyboardButton(
+                    text=lang_dict[lang]["keys"]["adventure"], callback_data="adventure"
+                )
+            ],
+            [
+                telegram.InlineKeyboardButton(
+                    text=lang_dict[lang]["keys"]["biography"], callback_data="biography"
+                )
+            ],
+            [
+                telegram.InlineKeyboardButton(
+                    text=lang_dict[lang]["keys"]["non-fiction"], callback_data="non-fiction"
+                )
+            ],
+            [
+                telegram.InlineKeyboardButton(
+                    text=lang_dict[lang]["keys"]["horror"], callback_data="horror"
+                )
+            ],
+            [
+                telegram.InlineKeyboardButton(
+                    text=lang_dict[lang]["keys"]["thriller"], callback_data="thriller"
+                )
+            ],
+            [
+                telegram.InlineKeyboardButton(
+                    text=lang_dict[lang]["keys"]["comedy"], callback_data="comedy"
+                )
+            ],
+            [
+                telegram.InlineKeyboardButton(
+                    text=lang_dict[lang]["keys"]["drama"], callback_data="drama"
+                )
+            ],
+            [
+                telegram.InlineKeyboardButton(
+                    text=lang_dict[lang]["keys"]["dn_c"], callback_data="done"
+                )
+            ],
+        ]
+        await query.message.reply_text(
+            text=lang_dict[lang]["phr"]["country"],
+            reply_markup=telegram.InlineKeyboardMarkup(buttons_genres),
+        )
+        return COUNTRY
+    genres.append(genre)
+    return GENRE
 
 
 async def cancel_settings(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -551,7 +639,7 @@ def main():
             COUNTRY: [telegram.ext.CallbackQueryHandler(country_chosen)],
             CITY_WEATHER: [MessageHandler(filters.TEXT, city_weather_chosen)],
             TRENDS: [MessageHandler(filters.TEXT, trends_chosen)],
-            BOOKS: [MessageHandler(filters.TEXT, books_chosen)],
+            BOOKS: [MessageHandler(filters.TEXT, genres_chosen)],
         },
         fallbacks=[CommandHandler("cancel", cancel_settings)],
     )
