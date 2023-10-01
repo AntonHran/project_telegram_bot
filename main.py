@@ -24,11 +24,14 @@ from src.repository.news import handler_news, handler_news_category, handler_new
 from src.repository.book import genre_handler, books_handler
 
 
-'''
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    lang_dict = await get_json(
+        Path(__file__).parent.joinpath("./src/services/languages.json")
+    )
+    lang = context.user_data["lang"]
     await update.message.reply_text(text=lang_dict[lang]["help"])
 
-
+'''
 async def search_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(text=lang_dict[lang]["search"])'''
 
@@ -51,7 +54,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def continue_(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print(Path(__file__).parent.joinpath("./src/services/languages.json"))
+    # print(Path(__file__).parent.joinpath("./src/services/languages.json"))
     lang_dict = await get_json(Path(__file__).parent.joinpath("./src/services/languages.json"))
     lang = context.user_data["lang"]
     await update.message.reply_text(
@@ -79,9 +82,6 @@ def main():
     print("Starting bot...")
     app = ApplicationBuilder().token(token=settings.token).build()
 
-    '''app.add_handler(CommandHandler("help", help_command))
-    app.add_handler(CommandHandler("search", search_command))'''
-
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("start", start)],
         states={
@@ -90,7 +90,6 @@ def main():
         },
         fallbacks=[],
     )
-    app.add_handler(conv_handler)
 
     conv_handler_settings = ConversationHandler(
         entry_points=[MessageHandler(filters.TEXT, continue_)],
@@ -108,8 +107,11 @@ def main():
         fallbacks=[CommandHandler("cancel", cancel_settings)],
     )
 
+    app.add_handler(CommandHandler("help", help_command))
+    '''
+    app.add_handler(CommandHandler("search", search_command))'''
+    app.add_handler(conv_handler)
     app.add_handler(conv_handler_settings)
-
     app.add_error_handler(error)
 
     print("Polling...")
