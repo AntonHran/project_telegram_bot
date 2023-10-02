@@ -12,16 +12,17 @@ from telegram.ext import (
 )
 
 from src.services.constants import (SELECTING_ACTION, LANG, ARTICLE_TIME, QUOTE_TIME, GENRE,
-                                    COUNTRY, CATEGORY, CITY_WEATHER, TRENDS, BOOKS, NEWS)
-from src.services.assist_functions import next_state_new, get_json
+                                    COUNTRY, CATEGORY, CITY_WEATHER, TRENDS)
+from src.services.assist_functions import get_json
+from src.services.next_state import next_state_new
 from src.config.config import settings
 from src.repository.categories import handler_category, handler_lang
 from src.repository.article import article_handler
 from src.repository.quote import quote_handler
 from src.repository.weather import weather_handler
 from src.repository.trends import trends_handler
-from src.repository.news import handler_news, handler_news_category, handler_news_country
-from src.repository.book import genre_handler, books_handler
+from src.repository.news import handler_news_category
+from src.repository.parameters_chosen import handler_news_country, books_handler
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -54,7 +55,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def continue_(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # print(Path(__file__).parent.joinpath("./src/services/languages.json"))
     lang_dict = await get_json(Path(__file__).parent.joinpath("./src/services/languages.json"))
     lang = context.user_data["lang"]
     await update.message.reply_text(
@@ -96,20 +96,17 @@ def main():
         states={
             ARTICLE_TIME: [article_handler],
             QUOTE_TIME: [quote_handler],
-            NEWS: [handler_news],
             COUNTRY: [handler_news_country],
             CATEGORY: [handler_news_category],
             CITY_WEATHER: [weather_handler],
             TRENDS: [trends_handler],
             GENRE: [books_handler],
-            BOOKS: [genre_handler],
         },
         fallbacks=[CommandHandler("cancel", cancel_settings)],
     )
 
     app.add_handler(CommandHandler("help", help_command))
-    '''
-    app.add_handler(CommandHandler("search", search_command))'''
+    '''app.add_handler(CommandHandler("search", search_command))'''
     app.add_handler(conv_handler)
     app.add_handler(conv_handler_settings)
     app.add_error_handler(error)
