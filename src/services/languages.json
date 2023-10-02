@@ -41,7 +41,7 @@
         "phr" : {
             "motivation": "Please set a time when you want to receive motivation quotes. To skip this setting write 'skip'. In this case the default time is 9:00 AM.",
             "weather": "Please send a name of a locality to get the weather forecast for this region.",
-            "twitter_trends": "Please send me a name of a city and a country you want the latest trends to get. Please do this according to a pattern: <city>space<country>.",
+            "twitter_trends": "Please send me a name of a city and a country you want the latest trends to get. Please do this according to a pattern: <city>/<country>.",
             "wiki": "Please set a time when you want to receive interesting articles. To skip this setting write 'skip'. In this case the default time is 9:00 AM.",
             "news": "Please choose the news category(-ies) to get all the latest news from different areas all over the world!",
             "country": "Please choose the country.",
@@ -97,7 +97,7 @@
         "phr" : {
             "motivation": "Будь ласка укажіть час коли ви бажаєте отримувати мотиваційні фрази. Для того щоб пропустити це налаштування відправте 'skip'. В цьому випадку час за замовченням встановлюється на 9:00 ранку.",
             "weather": "Будь ласка надішліть назву населеного пункту для отримання прогнозу погоди саме для цієї місцевості.",
-            "twitter_trends": "Будь ласка надішліть назву міста та країни тренди якої Ви бажаєте отримувати. Зробіть це будь ласка згідно з шаблоном: <місто>пробіл<країна>.",
+            "twitter_trends": "Будь ласка надішліть назву міста та країни тренди якої Ви бажаєте отримувати. Зробіть це будь ласка згідно з шаблоном: <місто>/<країна>.",
             "wiki": "Будь ласка вкажіть час коли ви хочете отримувати цікаві та пізнавальні статті. Для того щоб пропустити це налаштування відправте 'skip'. В цьому випадку час за замовченням встановлюється на 9:00 ранку.",
             "news": "Будь ласка оберіть категорію(-ії) новин для отримання останніх новин з різних галузь зі всього світу!",
             "country": "Будь ласка оберіть країну(-и).",
