@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import ContextTypes, MessageHandler, filters
 
 from src.services.constants import CITY_WEATHER
-from src.services.assist_functions import next_state_new
+from src.services.next_state import next_state_new
 
 
 async def city_weather_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
