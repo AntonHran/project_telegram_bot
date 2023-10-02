@@ -2,10 +2,10 @@ from pathlib import Path
 
 import telegram
 from telegram import Update
-from telegram.ext import ContextTypes, CallbackQueryHandler, ConversationHandler, MessageHandler, filters  # CallbackContext, JobQueue
+from telegram.ext import ContextTypes, CallbackQueryHandler, MessageHandler, filters  # CallbackContext, JobQueue
 
 from src.services.constants import COUNTRY, CATEGORY, NEWS
-from src.services.assist_functions import get_json, next_state_new
+from src.services.assist_functions import get_json
 
 
 async def news_category_choose(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -123,26 +123,5 @@ async def category_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return CATEGORY
 
 
-async def country_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    country = query.data
-    await query.answer()
-    if country == "done":
-        # return ConversationHandler.END
-        next_state = await next_state_new(update, context)
-        return next_state
-    context.user_data["menu_categories"][int(NEWS)]["news_countries"].append(country)
-    return COUNTRY
-
-
 handler_news = MessageHandler(filters.TEXT, news_category_choose)
-# handler_news = MessageHandler(filters.TEXT & ~filters.COMMAND, some_handler)
-handler_news_country = CallbackQueryHandler(country_chosen)
 handler_news_category = CallbackQueryHandler(category_chosen)
-
-news_handler = ConversationHandler(
-    entry_points=[MessageHandler(filters.TEXT, news_category_choose)],
-    states={CATEGORY: [CallbackQueryHandler(category_chosen)],
-            COUNTRY: [CallbackQueryHandler(country_chosen)]},
-    fallbacks=[]
-)
