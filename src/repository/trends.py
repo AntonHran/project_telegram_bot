@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import ContextTypes, MessageHandler, filters
 
 from src.services.constants import TRENDS
-from src.services.assist_functions import next_state_new
+from src.services.next_state import next_state_new
 
 
 async def trends_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
