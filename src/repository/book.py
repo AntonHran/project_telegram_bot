@@ -2,10 +2,10 @@ from pathlib import Path
 
 import telegram
 from telegram import Update
-from telegram.ext import ContextTypes, CallbackQueryHandler, MessageHandler, filters
+from telegram.ext import ContextTypes, MessageHandler, filters
 
-from src.services.constants import GENRE, BOOKS
-from src.services.assist_functions import next_state_new, get_json
+from src.services.constants import GENRE
+from src.services.assist_functions import get_json
 
 
 async def genres_choose(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -85,16 +85,5 @@ async def genres_choose(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return GENRE
 
 
-async def genre_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    genre = query.data
-    await query.answer()
-    if genre == "done":
-        next_state = await next_state_new(update, context)
-        return next_state
-    context.user_data["menu_categories"][int(BOOKS)].append(genre)
-    return GENRE
-
-
 genre_handler = MessageHandler(filters.TEXT, genres_choose)
-books_handler = CallbackQueryHandler(genre_chosen)
+
