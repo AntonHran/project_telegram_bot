@@ -102,6 +102,7 @@ async def settings_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 handler_lang = MessageHandler(filters.TEXT, lang_chosen)
 handler_category = telegram.ext.CallbackQueryHandler(settings_chosen)
+
 '''conv_handler = ConversationHandler(
         entry_points=[CommandHandler("start", start)],
         states={
